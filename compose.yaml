@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env.local
+    ports:
+      - 5173:5173
+    volumes:
+      # over here, we are mounting the current directory to the `/app` directory inside the container (which is the working directory of the container)
+      # syntax is `<path to the directory on host>:<path to the directory inside the container>`
+      # we're doing this because we want to reflect the changes made to the files in the current directory inside the container
+      - .:/app
+        # we also mount the node_modules directory inside the container at /app/node_modules. This is done to avoid installing the node_modules inside the container.
+      # node_modules will be installed on the host machine and mounted inside the container
+      - /app/node_modules
