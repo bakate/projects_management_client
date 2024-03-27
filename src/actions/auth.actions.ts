@@ -62,7 +62,16 @@ export const signUpUserAction = async (data: SignUpType) => {
 
   // store token in local storage
   if (res.token) {
-    localStorage.setItem("userToken", res.token);
+    const setNewDate = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
+    localStorage.setItem(
+      "newUser",
+      JSON.stringify({
+        userId: res.userId,
+        token: res.token,
+        username: res.username,
+        expiration: setNewDate.toISOString(),
+      })
+    );
   }
 
   return {

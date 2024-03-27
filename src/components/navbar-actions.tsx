@@ -1,7 +1,16 @@
 import { logoutUserAction } from "@/actions/auth.actions";
+import { CircleUser } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 type NavbarActionsProps = {
   isAuthenticated: boolean;
@@ -20,19 +29,32 @@ export const NavbarActions = ({ isAuthenticated }: NavbarActionsProps) => {
     <div className="flex gap-x-4">
       {isAuthenticated ? (
         <>
-          <Button asChild variant={"ghost"}>
-            <Link to={"/profile"}>Profile</Link>
-          </Button>
-          <Button
-            variant={"ghost"}
-            onClick={() => {
-              logoutUserAction();
-              toast.success("Logged out successfully");
-              navigation("/");
-            }}
-          >
-            Logout
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="secondary" size="icon" className="rounded-full">
+                <CircleUser className="h-5 w-5" />
+                <span className="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="hover:cursor-pointer">
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                className="hover:cursor-pointer"
+                onClick={() => {
+                  logoutUserAction();
+                  toast.success("Logged out successfully");
+                  navigation("/");
+                }}
+              >
+                Logout
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </>
       ) : (
         publicRoutes.map((route) => (
