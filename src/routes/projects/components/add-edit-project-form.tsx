@@ -1,4 +1,7 @@
-import { createProjectAction } from "@/actions/project.actions";
+import {
+  createProjectAction,
+  updateProjectAction,
+} from "@/actions/project.actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -9,9 +12,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { UserType } from "@/schemas/auth.schema";
-import { ProjectType, ProjectWithoutMetadata } from "@/schemas/project.schema";
+import { ProjectSchema, ProjectType } from "@/schemas/project.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
 import { useTransition } from "react";
@@ -33,14 +43,10 @@ const AddOrEditProjectForm = ({
   const navigate = useNavigate();
 
   const form = useForm<ProjectType>({
-    resolver: zodResolver(ProjectWithoutMetadata),
+    resolver: zodResolver(ProjectSchema),
     defaultValues: {
-      name: project
-        ? project.name
-        : ``,
-      description: project
-        ? project.description
-        : "",
+      name: project ? project.name : ``,
+      description: project ? project.description : "",
       status: project ? project.status : "active",
     },
     mode: "onBlur",
@@ -48,16 +54,29 @@ const AddOrEditProjectForm = ({
 
   const handleSubmission = async (data: ProjectType) => {
     startTransition(() => {
-      createProjectAction(data, user.token).then((res) => {
-        if (res?.error) {
-          toast.error(res.message);
-        }
-        if (res.project) {
-          toast.success(project ? "Project updated successfully" : "Project created successfully");
-          onClosed();
-          navigate("/");
-        }
-      });
+      if (project) {
+        updateProjectAction(project.id!, data, user.token).then((res) => {
+          if (res?.error) {
+            toast.error(res.message);
+          }
+          if (res.project) {
+            toast.success("Project updated successfully");
+            onClosed();
+            navigate("/");
+          }
+        });
+      } else {
+        createProjectAction(data, user.token).then((res) => {
+          if (res?.error) {
+            toast.error(res.message);
+          }
+          if (res.project) {
+            toast.success("Project created successfully");
+            onClosed();
+            navigate("/");
+          }
+        });
+      }
     });
   };
   return (
@@ -104,6 +123,33 @@ const AddOrEditProjectForm = ({
               </FormItem>
             )}
           />
+          {project ? (
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a status" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="suspended">Suspended</SelectItem>
+                      <SelectItem value="completed">Completed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ) : null}
           <div className="mt-8 flex justify-between w-full space-x-4">
             <Button
               type="button"
@@ -115,7 +161,7 @@ const AddOrEditProjectForm = ({
               Cancel
             </Button>
             <Button type="submit" className="w-full" disabled={isPending}>
-              Create Project
+              {project ? "Update Project" : "Create Project"}
               {isPending ? <Loader className="ml-2 animate-spin" /> : ""}
             </Button>
           </div>

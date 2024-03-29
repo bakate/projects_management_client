@@ -9,7 +9,7 @@ export const TaskSchema = z.object({
   title: z.string(),
   projectId: z.string(),
   status: z.enum(["in_progress", "completed"]),
-  createdAt: z.string(),
+  createdAt: z.string().optional(),
 });
 
 export const ProjectSchema = z.object({
@@ -19,14 +19,9 @@ export const ProjectSchema = z.object({
   userId: z.string().optional(),
   status: z.enum(["active", "suspended", "completed"]),
   projectId: z.string().optional(),
-  createdAt: z.string(),
+  createdAt: z.string().optional(),
   tasks: z.array(TaskSchema).optional(),
 });
 
-const TaskWithoutMetadata = TaskSchema.omit({ createdAt: true });
-export const ProjectWithoutMetadata = ProjectSchema.omit({
-  createdAt: true,
-});
-
-export type TaskType = z.infer<typeof TaskWithoutMetadata>;
-export type ProjectType = z.infer<typeof ProjectWithoutMetadata>;
+export type TaskType = z.infer<typeof TaskSchema>;
+export type ProjectType = z.infer<typeof ProjectSchema>;
