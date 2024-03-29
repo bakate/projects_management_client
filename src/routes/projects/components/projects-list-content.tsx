@@ -1,10 +1,13 @@
 import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
+import Modal from "@/components/ui/modal";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ProjectType } from "@/schemas/project.schema";
 import { StopwatchIcon } from "@radix-ui/react-icons";
 import { Activity, Check, Menu } from "lucide-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import AddOrEditProjectForm from "./add-edit-project-form";
 import Project from "./project-card";
 import ProjectStatusLink from "./project-status";
 import UserProfileCta from "./user-profile-cta";
@@ -22,6 +25,7 @@ const ProjectsListContent = ({
   projects,
   filteredProjects,
 }: ProjectsListContent) => {
+  const [showModal, setShowModal] = useState(false);
   return (
     <div className="flex flex-col mt-[9rem] sm:mt-2">
       <header className="flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
@@ -94,9 +98,7 @@ const ProjectsListContent = ({
               : "Completed"}{" "}
             Projects
           </h2>
-          <Button asChild>
-            <Link to="/new-project">Add Project</Link>
-          </Button>
+          <Button onClick={() => setShowModal(true)}>Add Project</Button>
         </div>
         <div className="flex flex-wrap justify-center mt-10">
           {filteredProjects.map((project) => (
@@ -104,6 +106,14 @@ const ProjectsListContent = ({
           ))}
         </div>
       </main>
+      <Modal
+        title="Add New Project"
+        description="Create a new project by filling out the form below"
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+      >
+        <AddOrEditProjectForm onClosed={() => setShowModal(false)} />
+      </Modal>
     </div>
   );
 };
