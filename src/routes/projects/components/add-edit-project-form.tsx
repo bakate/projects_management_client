@@ -3,6 +3,7 @@ import {
   updateProjectAction,
 } from "@/actions/project.actions";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -23,9 +24,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { UserType } from "@/schemas/auth.schema";
 import { ProjectSchema, ProjectType } from "@/schemas/project.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
+import { Loader, Trash } from "lucide-react";
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -48,8 +49,16 @@ const AddOrEditProjectForm = ({
       name: project ? project.name : ``,
       description: project ? project.description : "",
       status: project ? project.status : "active",
+      tasks: project ? project.tasks : [{ title: "", status: "in_progress" }],
     },
     mode: "onBlur",
+  });
+
+  const { control } = form;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "tasks",
   });
 
   const handleSubmission = async (data: ProjectType) => {
@@ -150,6 +159,69 @@ const AddOrEditProjectForm = ({
               )}
             />
           ) : null}
+
+          <div className="flex flex-col space-y-4">
+            {fields.map((project, index) => (
+              <div key={project.id}>
+                <FormLabel>Task {index + 1}</FormLabel>
+
+                <div className="flex items-center">
+                  <div className="flex flex-1 items-center gap-3">
+                    <FormField
+                      control={form.control}
+                      name={`tasks.${index}.status`}
+                      render={({ field }) => (
+                        <FormItem className="items-center">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value === "completed"}
+                              onCheckedChange={(value) => {
+                                if (value) {
+                                  return field.onChange("completed");
+                                } else {
+                                  return field.onChange("in_progress");
+                                }
+                              }}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    ></FormField>
+                    <FormField
+                      control={form.control}
+                      name={`tasks.${index}.title`}
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormControl>
+                            <Input placeholder="task title" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    ></FormField>
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    onClick={() => remove(index)}
+                  >
+                    <Trash className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={() => append({ title: "", status: "in_progress" })}
+            >
+              Add Task
+            </Button>
+          </div>
+
           <div className="mt-8 flex justify-between w-full space-x-4">
             <Button
               type="button"

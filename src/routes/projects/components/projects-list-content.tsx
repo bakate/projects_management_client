@@ -109,7 +109,7 @@ const ProjectsListContent = ({
           </h2>
           <Button onClick={() => setShowModal(true)}>Add Project</Button>
         </div>
-        <div className="flex flex-wrap justify-center mt-10">
+        <div className="grid  md:grid-cols-2 xl:grid-cols-3 mt-10 gap-6">
           {filteredProjects.map((project) => (
             <Project key={project.id} project={project} />
           ))}

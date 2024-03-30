@@ -30,7 +30,7 @@ export function convertDays(days: number): string {
     const hours = Math.floor(days * 24);
     if (hours < 1) {
       const minutes = Math.floor(days * 24 * 60);
-      return `${minutes} minute${minutes > 1 ? "s" : ""}`;
+      return `since ${minutes} minute${minutes > 1 ? "s" : ""}`;
     }
     return `since ${hours} hour${hours > 1 ? "s" : ""}`;
   } else if (days < 30) {
