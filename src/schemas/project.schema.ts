@@ -7,7 +7,7 @@ const descriptionMaxLength = 500;
 
 export const TaskSchema = z.object({
   id: z.string().optional(),
-  title: z.string(),
+  title: z.string().min(nameMinLength).max(nameMaxLength),
   projectId: z.string().optional(),
   status: z.enum(["in_progress", "completed"]),
   createdAt: z.string().optional(),

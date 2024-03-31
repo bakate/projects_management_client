@@ -20,7 +20,7 @@ export const Navbar = ({ user }: NavbarProps) => {
     >
       <Logo className="hidden md:flex" />
       <div className="md:flex-1"></div>
-      <NavbarActions isAuthenticated={!!user?.token} />
+      <NavbarActions user={user} />
     </div>
   );
 };

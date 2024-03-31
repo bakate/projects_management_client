@@ -54,7 +54,7 @@ const Project = ({ project }: ProjectProps) => {
 
   return (
     <>
-      <Card className="flex flex-col gap-4 py-4 hover:shadow-md  border-4">
+      <Card className="flex flex-col gap-4 py-4 hover:shadow-lg  hover:border-4 transition-all md:min-w-[400px]">
         <CardHeader>
           <CardTitle className="flex justify-between items-center">
             {project.name}
@@ -102,14 +102,14 @@ const Project = ({ project }: ProjectProps) => {
             )}
           </div>
           {project.tasks?.length ? (
-            <div className="grid gap-5">
+            <div className="grid gap-3">
               <Badge className="md:mx-auto max-w-16 md:w-full">
                 <span>
                   {project.tasks?.length} task
                   {project.tasks?.length > 1 ? "s" : ""}
                 </span>
               </Badge>
-              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 items-center grid-rows-2">
+              <div className="grid sm:grid-cols-2  gap-y-3 gap-x-2 items-center">
                 {project.tasks.map((task, index) => {
                   if (typeof task === "string") {
                     return null;
@@ -118,7 +118,7 @@ const Project = ({ project }: ProjectProps) => {
                     return (
                       <div
                         key={task.id}
-                        className="flex items-center gap-2 space-x-2"
+                        className="flex items-center space-x-2"
                       >
                         {task.status === "completed" ? (
                           <Check className="h-4 w-4 text-accent-foreground" />
@@ -127,7 +127,7 @@ const Project = ({ project }: ProjectProps) => {
                         )}
                         <span
                           className={cn(
-                            "text-sm text-muted-foreground",
+                            "text-sm text-muted-foreground line-clamp-1",
                             task.status === "completed" ? "line-through" : ""
                           )}
                         >

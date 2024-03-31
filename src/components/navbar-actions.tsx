@@ -1,4 +1,5 @@
 import { logoutUserAction } from "@/actions/auth.actions";
+import { UserType } from "@/schemas/auth.schema";
 import { CircleUser } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -8,12 +9,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 
 type NavbarActionsProps = {
-  isAuthenticated: boolean;
+  user: UserType | null;
 };
 
 const publicRoutes = [
@@ -23,11 +23,11 @@ const publicRoutes = [
   },
 ];
 
-export const NavbarActions = ({ isAuthenticated }: NavbarActionsProps) => {
+export const NavbarActions = ({ user }: NavbarActionsProps) => {
   const navigation = useNavigate();
   return (
     <div className="flex gap-x-4">
-      {isAuthenticated ? (
+      {user ? (
         <>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -37,12 +37,9 @@ export const NavbarActions = ({ isAuthenticated }: NavbarActionsProps) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="hover:cursor-pointer">
-                Settings
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
+              <DropdownMenuLabel>
+                Connected as <span className="capitalize">{user.username}</span>
+              </DropdownMenuLabel>
               <DropdownMenuItem
                 className="hover:cursor-pointer"
                 onClick={() => {

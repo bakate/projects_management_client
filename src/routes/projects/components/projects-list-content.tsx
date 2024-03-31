@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 import AddOrEditProjectForm from "./add-edit-project-form";
 import Project from "./project-card";
 import ProjectStatusLink from "./project-status";
-import UserProfileCta from "./user-profile-cta";
 
 type ProjectsListContent = {
   selectedStatus: string;
@@ -91,9 +90,6 @@ const ProjectsListContent = ({
                 }
               />
             </nav>
-            <div className="mt-auto">
-              <UserProfileCta />
-            </div>
           </SheetContent>
         </Sheet>
       </header>

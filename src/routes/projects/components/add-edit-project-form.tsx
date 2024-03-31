@@ -162,7 +162,7 @@ const AddOrEditProjectForm = ({
 
           <div className="flex flex-col space-y-4">
             {fields.map((project, index) => (
-              <div key={project.id}>
+              <div key={project.id} className="space-y-2">
                 <FormLabel>Task {index + 1}</FormLabel>
 
                 <div className="flex items-center">

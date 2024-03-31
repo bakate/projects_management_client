@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import AddOrEditProjectForm from "./add-edit-project-form";
 import ProjectsListContent from "./projects-list-content";
 import SidebarNavigation from "./sidebar-navigation";
-import UserProfileCta from "./user-profile-cta";
 
 type ProjectsListProps = {
   projects: ProjectType[];
@@ -60,9 +59,6 @@ const ProjectsList = ({ projects }: ProjectsListProps) => {
             setSelectedStatus={setSelectedStatus}
             projects={projects}
           />
-          <div className="mt-auto p-4">
-            <UserProfileCta />
-          </div>
         </div>
       </div>
       <ProjectsListContent
